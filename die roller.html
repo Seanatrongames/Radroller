@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rad Wasteland Roller</title>
+    <style>
+    	#resultImageTotal{
+    		height: 90px;
+    		background-color: #000000;
+    		margin-bottom: 15px;
+    	}
+    	.resultImage{
+    		width: 70px;
+    		height: 70px;
+    		margin: 10px 5px;
+    	}
+    </style>
+</head>
+
+<body>
+    <div id="resultImageTotal"></div>
+    <label for="nod">Number of Dice:</label>
+    <input id="nod" type="number" id="nod" name="nod" step="1" min="1" value="1">
+	<select name="colors" id="colors">
+  		<option value="purple">Purple</option>
+  		<option value="blue">Blue</option>
+  		<option value="teal">Teal</option>
+  		<option value="red">Red</option>
+		<option value="black">Black</option>
+		<option value="orange">Orange</option>
+	</select>
+	<button onclick="prepRoll()">Add to roll</button>
+	<button onclick="clickevent()">Roll</button>
+	<h2>To be rolled:</h2>
+	<ul id=toberolled>
+	</ul>
+    <script>
+        var para;
+        var rannum;
+        // toberolled = [color,numberOfDice]
+        var toberolled = [];
+
+	function clickevent(){
+		document.getElementById("resultImageTotal").innerHTML = "";
+		document.getElementById("toberolled").innerHTML = "";
+		if(toberolled.length){
+			for (var i = toberolled.length; i >= 0; i--) {
+				if(toberolled[i]){
+				 	let len=toberolled[i][1];
+				 	for(let j=0;j<len;j++){
+				 		let id = rollDie(whichDie(toberolled[i][0]));
+						addImage(toberolled[i][0],id);
+				 	}
+				 }
+			 } 
+		}else{
+			let len=document.getElementById("nod").value;
+			for(let i=0;i<len;i++){
+				let id = rollDie(whichDie());
+				color = document.getElementById("colors").value;
+				addImage(color,id);
+			}
+		}
+		toberolled = [];
+	}
+
+	function prepRoll(){
+		let tempcolor = document.getElementById("colors").value;
+		let tempNum = document.getElementById("nod").value;
+		toberolled.push([tempcolor,Number(tempNum)]);
+		document.getElementById("toberolled").innerHTML = "";
+		for (var i=0, len = toberolled.length; i<len; i++) {
+			if(toberolled[i].length === 2){
+				document.getElementById("toberolled").innerHTML += "<li>"+toberolled[i][1]+" "+toberolled[i][0]+"</li>";
+			}
+		}
+	}
+
+	function whichDie(color=null){
+		let dice;
+		if (color===null) {
+			switch(document.getElementById("colors").value){
+				case "purple":
+					dice = 12;
+				break;
+				case "blue":
+					dice = 6;
+				break;
+				case "teal":
+					dice = 4;
+				break;
+				case "red":
+					dice = 12;
+				break;
+				case "black":
+					dice = 6;
+				break;
+				case "orange":
+					dice = 4;
+				break;
+			}
+		}else{
+			switch(color){
+				case "purple":
+					dice = 12;
+				break;
+				case "blue":
+					dice = 6;
+				break;
+				case "teal":
+					dice = 4;
+				break;
+				case "red":
+					dice = 12;
+				break;
+				case "black":
+					dice = 6;
+				break;
+				case "orange":
+					dice = 4;
+				break;
+			}
+		}
+		return dice;
+	}
+	
+	function addImage(color,id){
+		let string = color;
+		if((string==="purple" || string==="red") && id>7){ 
+			id= id-7;
+		}
+		appendImage(string,id);
+	}
+
+	function appendImage(string,id){
+		document.getElementById("resultImageTotal").innerHTML = document.getElementById("resultImageTotal").innerHTML+'<img class="resultImage" src="assets/'+(string.charAt(0).toUpperCase() + string.slice(1))+'_'+id+'.png">';
+	}
+
+    function rollDie (sides){
+		rannum = Math.floor(Math.random() * sides) + 1
+		return rannum;
+    }
+    </script>
+</body>
